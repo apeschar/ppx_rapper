@@ -325,10 +325,16 @@ let query_function ~loc ?(body_fn = fun x -> x) function_body_factory
             let pattern = Buildef.ppat_var ~loc (Loc.make ~loc name) in
             Buildef.pexp_fun ~loc (Labelled name) None pattern body_so_far
           in
+          let sorted_deduped_in_params =
+            List.sort
+              ~compare:(fun { name = l; _ } { name = r; _ } ->
+                String.compare l r)
+              deduped_in_params
+          in
           List.fold_right ~f
             ~init:
               [%expr fun (module Db : Rapper_helper.CONNECTION) -> [%e body]]
-            deduped_in_params
+            sorted_deduped_in_params
   in
   match expression_contents.output_kind with
   | `Function -> (
