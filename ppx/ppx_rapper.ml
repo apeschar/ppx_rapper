@@ -170,7 +170,7 @@ let make_expand_get_and_exec_expression ~loc parsed_query input_kind output_kind
             (make_generic make_function
                [%expr
                  Caqti_request.([%e caqti_request_function_expr])
-                   [%e caqti_input_type] sql])
+                   ~oneshot:true [%e caqti_input_type] sql])
         with Codegen.Error s -> Error s
       in
       (expand_get, expand_exec)
